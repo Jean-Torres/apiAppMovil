@@ -28,11 +28,14 @@ export const findAllUsuario = async (req, res) => {
 export const findOneUsuario = async (req, res) => {
     const usuario = await usuarioModel.findOne({ usuario: req.body.usuario, contrasenha: req.body.contrasenha })
     if (await usuario) {
-        jwt.sign({ usuario }, 'secretKey', (error, token) => {
+       return jwt.sign({ usuario }, 'secretKey', (error, token) => {
             res.json({
                 token
             })
         });
+    }
+    else{
+        return null
     }
 }
 
