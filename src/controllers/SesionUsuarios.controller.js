@@ -27,15 +27,17 @@ export const findAllUsuario = async (req, res) => {
 
 export const findOneUsuario = async (req, res) => {
     const usuario = await usuarioModel.findOne({ usuario: req.body.usuario, contrasenha: req.body.contrasenha })
-    jwt.sign({ usuario }, 'secretKey', (error, token) => {
-        res.json({
-            token
-        })
-    });
+    if (await usuario) {
+        jwt.sign({ usuario }, 'secretKey', (error, token) => {
+            res.json({
+                token
+            })
+        });
+    }
 }
 
 export const createUsuario = async (req, res) => {
-    const newUsuario = new usuarioModel({ usuario: req.body.usuario, contrasenha: req.body.contrasenha})
+    const newUsuario = new usuarioModel({ usuario: req.body.usuario, contrasenha: req.body.contrasenha })
     const usuarioSave = await newUsuario.save();
     res.json({ usuarioSave });
 }
