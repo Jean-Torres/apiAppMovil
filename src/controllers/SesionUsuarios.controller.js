@@ -1,6 +1,7 @@
 import { token } from "morgan";
 import usuarioModel from "../models/sesionUsuarios.model";
 import jwt from "jsonwebtoken"
+import { json } from "express";
 
 export const verifyToken = (req, res, next) => {
     const headertoken = req.headers['authorization'];
@@ -26,17 +27,20 @@ export const findAllUsuario = async (req, res) => {
 }
 
 export const findOneUsuario = async (req, res) => {
-    const usuario = await usuarioModel.findOne({ usuario: req.body.usuario, contrasenha: req.body.contrasenha })
-    if (await usuario) {
-       return jwt.sign({ usuario }, 'secretKey', (error, token) => {
+    const usuario = await usuarioModel.findOne({ usuario: req.params.usuario, contrasenha: req.params.contrasenha })
+    jwt.sign({ usuario }, 'secretKey', (error, token) => {
+        if (usuario) {
             res.json({
                 token
             })
-        });
-    }
-    else{
-        return null
-    }
+        } else {
+            res.json(
+                {
+                    "message": null,
+                }
+            )
+        }
+    });
 }
 
 export const createUsuario = async (req, res) => {
